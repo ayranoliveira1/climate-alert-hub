@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-
 const Header = () => {
    const route = useRouter();
 
