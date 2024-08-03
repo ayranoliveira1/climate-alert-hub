@@ -1,7 +1,13 @@
+"use client";
+
 import { ModeToggle } from "@/app/components/mode-toogle";
 import { PiBellBold } from "react-icons/pi";
 
-const HeaderDashboard = () => {
+const HeaderDashboard = ({
+   onCountryChange,
+}: {
+   onCountryChange: (value: string) => void;
+}) => {
    return (
       <header className="absolute top-0 flex h-16 w-full items-center justify-between border-b px-[46px]">
          <div className="flex items-center gap-2">
@@ -16,6 +22,7 @@ const HeaderDashboard = () => {
                   name="location"
                   id="location"
                   className="w-[90px] bg-[#eeeeeeb4] text-sm text-[#666666] focus:border-none"
+                  onChange={(e) => onCountryChange(e.target.value)}
                >
                   <option value="BR">Brasil</option>
                   <option value="US">Estados Unidos</option>
