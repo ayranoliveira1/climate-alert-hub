@@ -3,11 +3,22 @@
 import { ChartColumn, Wrench } from "lucide-react";
 import HeaderDashboard from "./components/header-dashboard";
 import { TbLogout2 } from "react-icons/tb";
-import { FormEvent, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCircle } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { Graphic } from "./components/graphic";
-import { Switch } from "../components/ui/switch";
+import Settings from "./components/settings";
+
+const apiKey = "MP9VZVkUd-bD2RTassFmRYC-qpAGPCILxheLFwiOlbwfpCpJ";
+const query = "climate";
+
+interface Article {
+   url: string;
+   title: string;
+   source: { name: string };
+   publishedAt: string;
+   description: string;
+}
 
 const Dashboard = () => {
    const MapBrazil = dynamic(() => import("./components/maps/HeatMapBR"), {
@@ -28,8 +39,31 @@ const Dashboard = () => {
    });
 
    const [page, setPage] = useState<boolean>(true);
-   const [coutry, setCountry] = useState<string>("BR");
-   const [switchValue, setSwitchValue] = useState<boolean>(false);
+   const [country, setCountry] = useState<string>("BR");
+
+   const [articles, setArticles] = useState<Article[]>([]);
+   const [error, setError] = useState<string | null>(null);
+
+   useEffect(() => {
+      async function fetchNews() {
+         const url = `https://newsapi.org/v2/everything?q=${query}&apiKey=${apiKey}`;
+
+         try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.status === "ok") {
+               setArticles(data.articles);
+            } else {
+               setError("Erro ao buscar notícias.");
+            }
+         } catch (error) {
+            setError("Erro na requisição.");
+         }
+      }
+
+      fetchNews();
+   }, []);
 
    function handleCountryChange(value: string) {
       setCountry(value);
@@ -43,10 +77,6 @@ const Dashboard = () => {
       setPage(false);
    };
 
-   const handleSwitchCheck = (evet: FormEvent) => {
-      evet.preventDefault();
-      console.log(switchValue);
-   };
    return (
       <div className="relative flex h-screen gap-16">
          <HeaderDashboard onCountryChange={handleCountryChange} />
@@ -87,11 +117,11 @@ const Dashboard = () => {
                   <div className="flex gap-16">
                      <section className="flex flex-col gap-5">
                         <div className="rounde flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
-                           {coutry === "BR" && <MapBrazil />}
-                           {coutry === "US" && <MapUS />}
-                           {coutry === "RU" && <MapRussia />}
-                           {coutry === "PH" && <MapPhilippines />}
-                           {coutry === "MZ" && <MapMoçambique />}
+                           {country === "BR" && <MapBrazil />}
+                           {country === "US" && <MapUS />}
+                           {country === "RU" && <MapRussia />}
+                           {country === "PH" && <MapPhilippines />}
+                           {country === "MZ" && <MapMoçambique />}
                         </div>
 
                         <div className="rounde flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
@@ -129,29 +159,25 @@ const Dashboard = () => {
                         <div className="mt-5 flex flex-col gap-10">
                            <div className="flex flex-col gap-1 rounded-xl border border-black/50 py-5 pl-5 pr-8">
                               <h1 className="font-semibold">
-                                 Tittle: Something Here
+                                 <a href={articles[0]?.url}>
+                                    Tittle: {articles[0]?.title}
+                                 </a>
                               </h1>
 
-                              <p className="max-w-[540px] text-sm">
-                                 Lorem ipsum dolor sit amet. Non nobis sequi hic
-                                 odit voluptates ut nulla fugiat non nobis
-                                 voluptatem qui dolorum quam non molestiae
-                                 tempora ea quia ipsa. Rem corrupti dolorum aut
-                                 harum Quis rem quia autem
+                              <p className="w-[540px] overflow-y-hidden text-sm">
+                                 {articles[0]?.description}
                               </p>
                            </div>
 
                            <div className="flex flex-col gap-1 rounded-xl border border-black/50 py-5 pl-5 pr-8">
                               <h1 className="font-semibold">
-                                 Tittle: Something Here
+                                 <a href={articles[1]?.url}>
+                                    Tittle: {articles[1]?.title}
+                                 </a>
                               </h1>
 
-                              <p className="max-w-[540px] text-sm">
-                                 Lorem ipsum dolor sit amet. Non nobis sequi hic
-                                 odit voluptates ut nulla fugiat non nobis
-                                 voluptatem qui dolorum quam non molestiae
-                                 tempora ea quia ipsa. Rem corrupti dolorum aut
-                                 harum Quis rem quia autem
+                              <p className="w-[540px] overflow-y-hidden text-sm">
+                                 {articles[1]?.description}
                               </p>
                            </div>
                         </div>
@@ -159,92 +185,7 @@ const Dashboard = () => {
                   </div>
                </div>
             ) : (
-               <div className="flex items-center justify-between pt-10">
-                  <div className="h-[683px] w-[872px] rounded-2xl shadow-rounded">
-                     <div className="mt-2 flex flex-col px-10 py-5">
-                        <h1 className="text-xl font-bold">Account Details</h1>
-                        <p className="text-[#ABABAB]">
-                           Manage you account here
-                        </p>
-                     </div>
-
-                     <div className="h-[1px] w-full bg-[#ABABAB]/50"></div>
-
-                     <div className="flex flex-col px-10 py-14">
-                        <div className="flex items-center gap-2">
-                           <div className="h-10 w-10 rounded-full bg-[#A8A8A8]"></div>
-
-                           <p className="font-semibold">Profile picture</p>
-                        </div>
-                     </div>
-
-                     <div className="flex w-full flex-col gap-6 px-10">
-                        <div className="flex w-full items-center gap-10">
-                           <div className="flex w-full flex-col items-start gap-1">
-                              <p className="text-sm text-[#101010]">
-                                 First Name
-                              </p>
-                              <div className="w-full border px-3 text-lg">
-                                 IAGO
-                              </div>
-                           </div>
-                           <div className="flex w-full flex-col items-start gap-1">
-                              <p className="text-sm text-[#101010]">
-                                 Last Name
-                              </p>
-                              <div className="w-full border px-3 text-lg">
-                                 Correia Simoes
-                              </div>
-                           </div>
-                        </div>
-
-                        <div className="flex w-full flex-col items-start gap-1">
-                           <p className="text-sm text-[#101010]">First Name</p>
-                           <div className="w-full border px-3 font-semibold">
-                              IAGOOCSIMOES@GMAIL.COM
-                           </div>
-                        </div>
-
-                        <form
-                           onSubmit={handleSwitchCheck}
-                           className="flex flex-col gap-20"
-                        >
-                           <div className="flex flex-col items-start gap-3">
-                              <span className="flex items-center gap-1 text-lg font-light">
-                                 Recive Email
-                                 <button
-                                    type="button"
-                                    className="cursor-pointer text-[#3F08DD] hover:text-black"
-                                 >
-                                    (?)
-                                 </button>
-                              </span>
-                              <Switch
-                                 checked={switchValue}
-                                 onCheckedChange={setSwitchValue}
-                              />
-                           </div>
-
-                           <div className="flex justify-end">
-                              <button
-                                 type="submit"
-                                 className="bg-black px-6 py-1 text-white"
-                              >
-                                 Update
-                              </button>
-                           </div>
-                        </form>
-                     </div>
-
-                     <div className="mt-8 h-[1px] w-full bg-[#ABABAB]/50"></div>
-
-                     <div className="w-full items-center gap-6 px-10 pt-5">
-                        <button className="text-red-500 hover:text-red-800">
-                           Delete Account
-                        </button>
-                     </div>
-                  </div>
-               </div>
+               <Settings />
             )}
          </main>
       </div>

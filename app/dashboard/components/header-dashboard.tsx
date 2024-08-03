@@ -18,11 +18,11 @@ const HeaderDashboard = ({ onCountryChange }: HeaderProps) => {
 
          <div className="text-3xl drop-shadow-lg">Climate Alert Hub</div>
          <div className="flex items-center gap-20">
-            <div className="rounded-xl bg-[#eeeeeeb4] px-2 py-1 shadow-shape">
+            <div className="rounded-xl px-2 py-1 shadow-shape">
                <select
                   name="location"
                   id="location"
-                  className="w-[90px] bg-[#eeeeeeb4] text-sm text-[#666666] focus:border-none"
+                  className="w-[90px] text-sm text-[#666666] focus:border-none"
                   onChange={(e) => onCountryChange(e.target.value)}
                >
                   <option value="BR">Brasil</option>
