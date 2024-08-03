@@ -4,6 +4,8 @@ import { ChartColumn, Wrench } from "lucide-react";
 import HeaderDashboard from "./components/header-dashboard";
 import { TbLogout2 } from "react-icons/tb";
 import { useState } from "react";
+import { FaCircle } from "react-icons/fa";
+import { Graphic } from "./components/graphic";
 
 const Dashboard = () => {
    const [page, setPage] = useState<boolean>(true);
@@ -48,8 +50,50 @@ const Dashboard = () => {
             </div>
          </nav>
 
-         <main className="mt-28">
-            {page ? <div>DASHBOARD</div> : <div>SETTINGS</div>}
+         <main className="mt-24">
+            {page ? (
+               <div className="flex flex-col gap-3">
+                  <h1>Dashboard</h1>
+
+                  <div className="flex gap-16">
+                     <section className="flex flex-col gap-5">
+                        <div className="rounde flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
+                           <h1>
+                              mapa da equipe <br /> coda fofo
+                           </h1>
+                        </div>
+
+                        <div className="rounde flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
+                           <h1>
+                              5 cidades da <br /> equipe <br /> coda fofo
+                           </h1>
+                        </div>
+                     </section>
+
+                     <div className="flex flex-col gap-5">
+                        <h1>Rain forecasts</h1>
+
+                        <Graphic />
+
+                        <div className="flex items-center gap-20">
+                           <span className="flex items-center gap-2 text-xs">
+                              <FaCircle className="size-3 text-black" />
+                              After 6 days
+                           </span>
+
+                           <span className="flex items-center gap-2 text-xs">
+                              <FaCircle className="size-3 text-[#D8D9DB]" />
+                              Last 6 days
+                           </span>
+                        </div>
+
+                        <h1>Last News</h1>
+                     </div>
+                  </div>
+               </div>
+            ) : (
+               <div>SETTINGS</div>
+            )}
          </main>
       </div>
    );

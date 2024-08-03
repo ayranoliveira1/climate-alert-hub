@@ -2,8 +2,11 @@
 
 import { FcGoogle } from "react-icons/fc";
 import Header from "../components/header";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+   const route = useRouter();
+
    return (
       <>
          <Header />
@@ -15,7 +18,10 @@ export default function Login() {
                   Get started today and enjoy complete access <br /> to our
                   content!
                </p>
-               <button className="mx-auto flex w-fit items-center justify-center gap-2 px-5 py-2 text-[24px] shadow-md hover:bg-gray-500/10">
+               <button
+                  onClick={() => route.push("/dashboard")}
+                  className="mx-auto flex w-fit items-center justify-center gap-2 px-5 py-2 text-[24px] shadow-md hover:bg-gray-500/10"
+               >
                   <FcGoogle className="size-[49px]" />
                   Sign in with Google
                </button>

@@ -11,7 +11,7 @@ const HeaderDashboard = () => {
          </div>
          <div className="text-3xl drop-shadow-lg">Climate Alert Hub</div>
          <div className="flex items-center gap-20">
-            <div className="rounded-xl bg-[#eeeeeeb4] px-2 py-1 shadow-md">
+            <div className="rounded-xl bg-[#eeeeeeb4] px-2 py-1 shadow-shape">
                <select
                   name="location"
                   id="location"
