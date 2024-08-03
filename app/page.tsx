@@ -11,10 +11,10 @@ export default function Home() {
 
          <main className="flex h-[1045px] min-h-screen justify-center bg-background-home bg-cover bg-center pt-[110px] text-center">
             <div className="flex flex-col gap-8">
-               <h2 className="text-7xl font-bold">
+               <h2 className="text-7xl font-bold text-black">
                   Connect with us to receive <br /> news about weather
                </h2>
-               <h3 className="pt-8 text-[24px]">
+               <h3 className="pt-8 text-[24px] text-black">
                   Climate Hub Alert is an innovative web platafort designed to{" "}
                   <br /> provide crucial information about weather conditions
                   and <br /> extreme event alerts
