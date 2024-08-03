@@ -3,11 +3,11 @@
 import { ModeToggle } from "@/app/components/mode-toogle";
 import { PiBellBold } from "react-icons/pi";
 
-const HeaderDashboard = ({
-   onCountryChange,
-}: {
+interface HeaderProps {
    onCountryChange: (value: string) => void;
-}) => {
+}
+
+const HeaderDashboard = ({ onCountryChange }: HeaderProps) => {
    return (
       <header className="absolute top-0 flex h-16 w-full items-center justify-between border-b px-[46px]">
          <div className="flex items-center gap-2">
@@ -15,6 +15,7 @@ const HeaderDashboard = ({
 
             <p className="text-sm">USERNAME</p>
          </div>
+
          <div className="text-3xl drop-shadow-lg">Climate Alert Hub</div>
          <div className="flex items-center gap-20">
             <div className="rounded-xl bg-[#eeeeeeb4] px-2 py-1 shadow-shape">
@@ -26,8 +27,9 @@ const HeaderDashboard = ({
                >
                   <option value="BR">Brasil</option>
                   <option value="US">Estados Unidos</option>
-                  <option value="CA">Canada</option>
-                  <option value="MX">Mexico</option>
+                  <option value="RU">Russia</option>
+                  <option value="PH">Filipinas</option>
+                  <option value="MZ">Moçambique</option>
                </select>
             </div>
 

@@ -6,16 +6,16 @@ import "leaflet/dist/leaflet.css";
 
 // Dados simulados das cidades
 const cities = [
-   [27.7663, -81.6868, "Florida"], // Centro da Florida
-   [31.9686, -99.9018, "Texas"], // Centro do Texas
-   [36.7783, -119.4179, "California"], // Centro da Califórnia
-   [35.4676, -97.5164, "Oklahoma"], // Centro de Oklahoma
-   [30.9843, -91.9623, "Louisiana"], // Centro da Louisiana
+   [27.7663, -81.6868, "Florida"],
+   [31.9686, -99.9018, "Texas"],
+   [36.7783, -119.4179, "California"],
+   [35.4676, -97.5164, "Oklahoma"],
+   [30.9843, -91.9623, "Louisiana"],
 ];
 
 const EuaMap = () => {
    useEffect(() => {
-      // Inicializa o mapa centrado no Brasil
+      // Inicializa o mapa centrado no EUA
       const map = L.map("map").setView([37.0902, -95.7129], 3);
 
       // Adiciona o tile layer do CartoDB Positron
@@ -32,20 +32,20 @@ const EuaMap = () => {
             color: "red",
             fillColor: "#f03",
             fillOpacity: 0.5,
-            radius: 90000, // Define o raio dos círculos
+            radius: 90000,
             weight: 3,
          })
             .addTo(map)
-            .bindPopup(String(name)); // Exibe o nome da cidade no popup
+            .bindPopup(String(name));
       });
 
       cities.forEach(([lat, lng, name]) => {
          L.marker([Number(lat), Number(lng)], {
             icon: L.divIcon({
-               className: "city-label", // Classe CSS personalizada
-               html: `<div>${name}</div>`, // HTML para o conteúdo do marcador
-               iconSize: [100, 40], // Tamanho do ícone
-               iconAnchor: [50, 20], // Ponto de ancoragem do ícone
+               className: "city-label",
+               html: `<div>${name}</div>`,
+               iconSize: [100, 40],
+               iconAnchor: [50, 20],
             }),
          })
             .addTo(map)
@@ -59,14 +59,12 @@ const EuaMap = () => {
             );
       });
 
-      // Adiciona um controle de zoom
       L.control
          .zoom({
             position: "topright",
          })
          .addTo(map);
 
-      // Cleanup map on component unmount
       return () => {
          map.remove();
       };

@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 
 // Dados simulados das cidades
 const cities = [
-   [-15.7801, -47.9292, "Brasília"], // Brasília
+   [-15.7801, -47.9292, "Brasília"],
    [-23.5505, -46.6333, "São Paulo"],
    [-12.9714, -38.5014, "Salvador"],
    [-30.0176, -51.3034, "Rio Grande do Sul"],
@@ -32,20 +32,20 @@ const MapComponent = () => {
             color: "red",
             fillColor: "#f03",
             fillOpacity: 0.5,
-            radius: 90000, // Define o raio dos círculos
+            radius: 90000,
             weight: 3,
          })
             .addTo(map)
-            .bindPopup(String(name)); // Exibe o nome da cidade no popup
+            .bindPopup(String(name));
       });
 
       cities.forEach(([lat, lng, name]) => {
          L.marker([Number(lat), Number(lng)], {
             icon: L.divIcon({
-               className: "city-label", // Classe CSS personalizada
-               html: `<div>${name}</div>`, // HTML para o conteúdo do marcador
-               iconSize: [100, 40], // Tamanho do ícone
-               iconAnchor: [50, 20], // Ponto de ancoragem do ícone
+               className: "city-label",
+               html: `<div>${name}</div>`,
+               iconSize: [100, 40],
+               iconAnchor: [50, 20],
             }),
          })
             .addTo(map)
@@ -59,14 +59,12 @@ const MapComponent = () => {
             );
       });
 
-      // Adiciona um controle de zoom
       L.control
          .zoom({
             position: "topright",
          })
          .addTo(map);
 
-      // Cleanup map on component unmount
       return () => {
          map.remove();
       };
