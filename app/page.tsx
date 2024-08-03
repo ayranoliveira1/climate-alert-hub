@@ -6,10 +6,10 @@ import Header from "./components/header";
 export default function Home() {
    const route = useRouter();
    return (
-      <div className="h-screen">
+      <div className="min-h-screen bg-background-home bg-center">
          <Header />
 
-         <main className="flex h-[1045px] min-h-screen justify-center bg-background-home bg-cover bg-center pt-[110px] text-center">
+         <main className="flex justify-center pt-[110px] text-center">
             <div className="flex flex-col gap-8">
                <h2 className="text-7xl font-bold text-black">
                   Connect with us to receive <br /> news about weather
