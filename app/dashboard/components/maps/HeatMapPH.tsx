@@ -74,6 +74,7 @@ const MapComponentPhilippines = () => {
       <div
          id="map-philippines"
          style={{ height: "383px", width: "100%", borderRadius: "10px" }}
+         className="z-20"
       />
    );
 };

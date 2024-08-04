@@ -9,18 +9,10 @@ import dynamic from "next/dynamic";
 import { Graphic } from "./components/graphic";
 import Settings from "./components/settings";
 
-const apiKey = "MP9VZVkUd-bD2RTassFmRYC-qpAGPCILxheLFwiOlbwfpCpJ";
-const query = "climate";
-
-interface Article {
-   url: string;
-   title: string;
-   source: { name: string };
-   publishedAt: string;
-   description: string;
-}
+import ModalNews from "./components/modal-news";
 
 const Dashboard = () => {
+   // Carregamento dinâmico dos mapas
    const MapBrazil = dynamic(() => import("./components/maps/HeatMapBR"), {
       ssr: false,
    });
@@ -33,41 +25,49 @@ const Dashboard = () => {
    const MapPhilippines = dynamic(() => import("./components/maps/HeatMapPH"), {
       ssr: false,
    });
-
    const MapMoçambique = dynamic(() => import("./components/maps/HeatMapMZ"), {
       ssr: false,
    });
 
    const [page, setPage] = useState<boolean>(true);
    const [country, setCountry] = useState<string>("BR");
+   const [news, setNews] = useState<
+      Array<{ title: string; url: string; description: string }>
+   >([]);
+   const [opneModalNews, setOpneModalNews] = useState<boolean>(false);
 
-   const [articles, setArticles] = useState<Article[]>([]);
-   const [error, setError] = useState<string | null>(null);
+   const API_URL = "https://api.currentsapi.services/v1/latest-news";
+   const API_KEY = "MP9VZVkUd-bD2RTassFmRYC-qpAGPCILxheLFwiOlbwfpCpJ";
+
+   const fetchNews = async (countryCode: string) => {
+      const url = `${API_URL}?country=${countryCode}&apiKey=${API_KEY}`;
+      try {
+         const response = await fetch(url);
+         const data = await response.json();
+         if (data.status === "ok" && data.news.length > 0) {
+            const topNews = data.news.slice(0, 10).map((newsItem: any) => ({
+               title: newsItem.title,
+               url: newsItem.url,
+               description: newsItem.description,
+            }));
+            setNews(topNews);
+         } else {
+            console.error("Erro ao buscar notícias:", data);
+            setNews([]);
+         }
+      } catch (error) {
+         console.error("Erro na requisição:", error);
+         setNews([]);
+      }
+   };
 
    useEffect(() => {
-      async function fetchNews() {
-         const url = `https://newsapi.org/v2/everything?q=${query}&apiKey=${apiKey}`;
+      fetchNews(country);
+   }, [country]);
 
-         try {
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (data.status === "ok") {
-               setArticles(data.articles);
-            } else {
-               setError("Erro ao buscar notícias.");
-            }
-         } catch (error) {
-            setError("Erro na requisição.");
-         }
-      }
-
-      fetchNews();
-   }, []);
-
-   function handleCountryChange(value: string) {
+   const handleCountryChange = (value: string) => {
       setCountry(value);
-   }
+   };
 
    const handleOpenDashboard = () => {
       setPage(true);
@@ -75,6 +75,10 @@ const Dashboard = () => {
 
    const handleOpenSettings = () => {
       setPage(false);
+   };
+
+   const handleOpenNews = () => {
+      setOpneModalNews(!opneModalNews);
    };
 
    return (
@@ -88,14 +92,18 @@ const Dashboard = () => {
                <div className="flex flex-col items-center gap-4 px-4">
                   <button
                      onClick={handleOpenDashboard}
-                     className={`flex w-[162px] items-center gap-3 rounded-xl px-5 py-2 text-sm ${page ? "bg-black text-white" : "hover:bg-gray-300/50"} `}
+                     className={`flex w-[162px] items-center gap-3 rounded-xl px-5 py-2 text-sm ${
+                        page ? "bg-black text-white" : "hover:bg-gray-300/50"
+                     } `}
                   >
                      <ChartColumn className="size-4" /> DASHBOARD
                   </button>
 
                   <button
                      onClick={handleOpenSettings}
-                     className={`flex w-[162px] items-center gap-3 rounded-xl px-5 py-2 text-sm ${!page ? "bg-black text-white" : "hover:bg-gray-300/50"}`}
+                     className={`flex w-[162px] items-center gap-3 rounded-xl px-5 py-2 text-sm ${
+                        !page ? "bg-black text-white" : "hover:bg-gray-300/50"
+                     }`}
                   >
                      <Wrench className="size-4" />
                      SETTINGS
@@ -107,6 +115,10 @@ const Dashboard = () => {
                   </button>
                </div>
             </div>
+
+            <div className="left-[6 px] fixed bottom-0 text-[9px] font-semibold">
+               Created By: Equipe Coda Fofo
+            </div>
          </nav>
 
          <main className="mt-24 w-full">
@@ -116,7 +128,7 @@ const Dashboard = () => {
 
                   <div className="flex gap-16">
                      <section className="flex flex-col gap-5">
-                        <div className="rounde flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
+                        <div className="flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
                            {country === "BR" && <MapBrazil />}
                            {country === "US" && <MapUS />}
                            {country === "RU" && <MapRussia />}
@@ -124,7 +136,7 @@ const Dashboard = () => {
                            {country === "MZ" && <MapMoçambique />}
                         </div>
 
-                        <div className="rounde flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
+                        <div className="flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
                            <h1>
                               5 cidades da <br /> equipe <br /> coda fofo
                            </h1>
@@ -151,35 +163,48 @@ const Dashboard = () => {
                         <div className="mt-5 flex items-center justify-between">
                            <h1 className="font-semibold">Last News</h1>
 
-                           <p className="cursor-pointer font-medium text-[#3F08DD] hover:text-black">
-                              See all
-                           </p>
+                           <a
+                              onClick={handleOpenNews}
+                              className="cursor-pointer font-medium text-[#3F08DD] hover:text-black"
+                           >
+                              See All
+                           </a>
+
+                           {opneModalNews && (
+                              <ModalNews
+                                 handleOpenNews={handleOpenNews}
+                                 news={news}
+                              />
+                           )}
                         </div>
 
                         <div className="mt-5 flex flex-col gap-10">
-                           <div className="flex flex-col gap-1 rounded-xl border border-black/50 py-5 pl-5 pr-8">
-                              <h1 className="font-semibold">
-                                 <a href={articles[0]?.url}>
-                                    Tittle: {articles[0]?.title}
-                                 </a>
-                              </h1>
+                           {news.length > 0 ? (
+                              news.slice(0, 2).map((item) => (
+                                 <div
+                                    key={item.title}
+                                    className="flex flex-col gap-1 rounded-xl border border-black/50 py-5 pl-5 pr-8"
+                                 >
+                                    <h1 className="font-semibold">
+                                       <a
+                                          href={item.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                       >
+                                          Título: {item.title}
+                                       </a>
+                                    </h1>
 
-                              <p className="w-[540px] overflow-y-hidden text-sm">
-                                 {articles[0]?.description}
+                                    <p className="w-[540px] overflow-y-hidden text-sm">
+                                       {item.description}
+                                    </p>
+                                 </div>
+                              ))
+                           ) : (
+                              <p className="text-gray-500">
+                                 Nenhuma notícia disponível.
                               </p>
-                           </div>
-
-                           <div className="flex flex-col gap-1 rounded-xl border border-black/50 py-5 pl-5 pr-8">
-                              <h1 className="font-semibold">
-                                 <a href={articles[1]?.url}>
-                                    Tittle: {articles[1]?.title}
-                                 </a>
-                              </h1>
-
-                              <p className="w-[540px] overflow-y-hidden text-sm">
-                                 {articles[1]?.description}
-                              </p>
-                           </div>
+                           )}
                         </div>
                      </div>
                   </div>
