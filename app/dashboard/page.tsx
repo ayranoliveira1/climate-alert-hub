@@ -7,12 +7,41 @@ import { useEffect, useState } from "react";
 import { FaCircle } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { Graphic } from "./components/graphic";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Settings from "./components/settings";
 
 import ModalNews from "./components/modal-news";
 import PopulationPage from "./components/population";
+import { useRouter } from "next/navigation";
+import { UserProfile } from "../types/use-profile";
+import Image from "next/image";
+
+function getCountrySigle(country: string) {
+   if (country === "brazil") {
+      return "BR";
+   } else if (country === "mocambique") {
+      return "MZ";
+   } else if (country === "russia") {
+      return "RU";
+   } else if (country === "unitedStates") {
+      return "US";
+   } else {
+      return "PH";
+   }
+}
 
 const Dashboard = () => {
+   const [page, setPage] = useState<boolean>(false);
+   const [country, setCountry] = useState<string>("BR");
+   const [news, setNews] = useState<
+      Array<{ title: string; url: string; description: string }>
+   >([]);
+   const [data, setData] = useState<any>();
+   const [opneModalNews, setOpneModalNews] = useState<boolean>(false);
+   const [sessin, setSession] = useState<UserProfile | null>(
+      JSON.parse(localStorage.getItem("user") || "{}"),
+   );
+
    // Carregamento dinâmico dos mapas
    const MapBrazil = dynamic(() => import("./components/maps/HeatMapBR"), {
       ssr: false,
@@ -30,15 +59,18 @@ const Dashboard = () => {
       ssr: false,
    });
 
-   const [page, setPage] = useState<boolean>(true);
-   const [country, setCountry] = useState<string>("BR");
-   const [news, setNews] = useState<
-      Array<{ title: string; url: string; description: string }>
-   >([]);
-   const [opneModalNews, setOpneModalNews] = useState<boolean>(false);
-
    const API_URL = "https://api.currentsapi.services/v1/latest-news";
    const API_KEY = "MP9VZVkUd-bD2RTassFmRYC-qpAGPCILxheLFwiOlbwfpCpJ";
+
+   const router = useRouter();
+
+   useEffect(() => {
+      if (!sessin) {
+         localStorage.removeItem("jwt");
+         localStorage.removeItem("user");
+         router.push("/login");
+      }
+   }, [sessin, router]);
 
    const fetchNews = async (countryCode: string) => {
       const url = `${API_URL}?country=${countryCode}&apiKey=${API_KEY}`;
@@ -62,8 +94,22 @@ const Dashboard = () => {
       }
    };
 
+   const fetchData = async () => {
+      const url = "https://6c8gv2v8-3001.brs.devtunnels.ms/dashboard";
+
+      const response = await fetch(url, {
+         method: "GET",
+         headers: {
+            authorization: `Bearer ${localStorage.getItem("jwt")}`,
+         },
+      });
+      const data = await response.json();
+      setData(data);
+   };
+
    useEffect(() => {
       fetchNews(country);
+      fetchData();
    }, [country]);
 
    const handleCountryChange = (value: string) => {
@@ -81,6 +127,12 @@ const Dashboard = () => {
    const handleOpenNews = () => {
       setOpneModalNews(!opneModalNews);
    };
+
+   const handleLogout = () => {
+      setSession(null);
+   };
+
+   if (!sessin?.country) return;
 
    return (
       <div className="relative flex h-screen">
@@ -110,7 +162,10 @@ const Dashboard = () => {
                      SETTINGS
                   </button>
 
-                  <button className="mt-2 flex w-[162px] items-center gap-3 rounded-xl px-5 py-2 text-sm text-red-500 hover:bg-gray-300/50">
+                  <button
+                     onClick={handleLogout}
+                     className="mt-2 flex w-[162px] items-center gap-3 rounded-xl px-5 py-2 text-sm text-red-500 hover:bg-gray-300/50"
+                  >
                      <TbLogout2 className="size-4" />
                      LOG OUT
                   </button>
@@ -128,23 +183,63 @@ const Dashboard = () => {
                   <div className="flex gap-16">
                      <section className="flex flex-col gap-5">
                         <div className="flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
-                           {country === "BR" && <MapBrazil />}
-                           {country === "US" && <MapUS />}
-                           {country === "RU" && <MapRussia />}
-                           {country === "PH" && <MapPhilippines />}
-                           {country === "MZ" && <MapMoçambique />}
+                           {/* {data?.map ? (
+                              <MapBrazil
+                                 citiesArray={data.map}
+                                 country={sessin?.country || "brazil"}
+                              />
+                           ) : (
+                              <></>
+                           )} */}
                         </div>
 
-                        <div className="flex h-[383px] w-[422px] justify-center rounded-2xl shadow-rounded">
+                        <div className="flex h-[383px] w-[422px] flex-col items-center rounded-2xl shadow-rounded">
                            <h1 className="pt-2 text-2xl">5 Cities Weather:</h1>
-                           {/* // TODO: Add cities weather */}
+                           {data ? (
+                              <table>
+                                 <tbody className="flex flex-col">
+                                    {data.temperatureCities.map((city: any) => (
+                                       <tr
+                                          key={city.name}
+                                          className="mt-4 flex gap-10"
+                                       >
+                                          <td>
+                                             <Image
+                                                src={"https:" + city.icon}
+                                                alt={city.name}
+                                                width={50}
+                                                height={50}
+                                             />
+                                          </td>
+                                          <td className="text-lg">
+                                             {city.temperature} °{city.unit}
+                                          </td>
+                                          <td className="text-lg">
+                                             {city.name}
+                                          </td>
+                                       </tr>
+                                    ))}
+                                 </tbody>
+                              </table>
+                           ) : (
+                              <div className="flex flex-col items-center gap-4">
+                                 <p className="text-lg">Loading...</p>
+                                 <AiOutlineLoading3Quarters className="size-7 animate-spin" />
+                              </div>
+                           )}
                         </div>
                      </section>
 
                      <div className="flex max-w-[640px] flex-col gap-3">
                         <h1 className="font-semibold">Rain forecasts</h1>
-
-                        <Graphic />
+                        {data?.graphic ? (
+                           <Graphic cities={data.graphic} />
+                        ) : (
+                           <div className="flex flex-col items-center gap-4">
+                              <p className="text-lg">Loading...</p>
+                              <AiOutlineLoading3Quarters className="size-7 animate-spin" />
+                           </div>
+                        )}
 
                         <div className="flex items-center gap-20">
                            <span className="flex items-center gap-2 text-xs">

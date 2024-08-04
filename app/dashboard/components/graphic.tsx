@@ -8,14 +8,6 @@ import {
 } from "@/app/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-const chartData = [
-   { city: "São Paulo", After: 51, Last: 29 },
-   { city: "Rio de Janeiro", After: 42, Last: 56 },
-   { city: "Salvador", After: 49, Last: 25 },
-   { city: "Santa Catarina", After: 36, Last: 49 },
-   { city: "Brasilia", After: 57, Last: 43 },
-];
-
 const chartConfig = {
    After: {
       label: "After",
@@ -27,7 +19,17 @@ const chartConfig = {
    },
 } satisfies ChartConfig;
 
-export function Graphic() {
+export function Graphic({
+   cities,
+}: {
+   cities: { name: string; After: number; Last: number }[];
+}) {
+   const chartData = cities.map((city) => ({
+      city: city.name,
+      After: city.After,
+      Last: city.Last,
+   }));
+   console.log(chartData);
    return (
       <ChartContainer config={chartConfig} className="h-[300px] w-full">
          <BarChart accessibilityLayer data={chartData}>

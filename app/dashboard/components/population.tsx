@@ -1,10 +1,5 @@
+import { Country } from "@/app/types/country";
 import { useEffect, useState } from "react";
-
-interface Country {
-   name: string;
-   population: number;
-   flag: string;
-}
 
 const PopulationPage = () => {
    const [countries, setCountries] = useState<Country[]>([]);

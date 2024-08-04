@@ -1,8 +1,52 @@
+import { UserProfile } from "@/app/types/use-profile";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 interface ModalDeleteProps {
    handleOpenModalDelete: () => void;
 }
 
 const ModalSettings = ({ handleOpenModalDelete }: ModalDeleteProps) => {
+   const [sessin, setSession] = useState<UserProfile | null>(
+      JSON.parse(localStorage.getItem("user") || "{}"),
+   );
+
+   const router = useRouter();
+
+   const deleteUser = async () => {
+      const token = localStorage.getItem("jwt");
+
+      const response = await fetch(
+         "https://6c8gv2v8-3001.brs.devtunnels.ms/auth/me",
+         {
+            method: "DELETE",
+            headers: {
+               authorization: `Bearer ${token}`,
+            },
+         },
+      );
+
+      if (!response.ok) {
+         console.log("Erro ao deletar conta:", response.statusText);
+      }
+
+      handleLogout();
+
+      window.location.href = "/login";
+   };
+
+   useEffect(() => {
+      if (!sessin) {
+         localStorage.removeItem("jwt");
+         localStorage.removeItem("user");
+         router.push("/login");
+      }
+   }, [sessin, router]);
+
+   const handleLogout = () => {
+      setSession(null);
+   };
+
    return (
       <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
          <div className="relative h-[180px] w-[443px] bg-white px-5 py-3 shadow-rounded">
@@ -15,7 +59,7 @@ const ModalSettings = ({ handleOpenModalDelete }: ModalDeleteProps) => {
 
             <div className="absolute bottom-5 right-5 flex items-center gap-4">
                <button
-                  onClick={handleOpenModalDelete}
+                  onClick={deleteUser}
                   className="flex items-center justify-center border px-4 py-1"
                >
                   Yes

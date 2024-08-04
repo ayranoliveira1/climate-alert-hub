@@ -1,19 +1,45 @@
 "use client";
 
 import { ModeToggle } from "@/app/components/mode-toogle";
+import Image from "next/image";
+import { useState } from "react";
 import { PiBellBold } from "react-icons/pi";
 
 interface HeaderProps {
    onCountryChange: (value: string) => void;
 }
 
+interface UserProfile {
+   firstName: string;
+   lastName: string;
+   photoUrl: string;
+   email: string;
+   reciveEmail: boolean;
+   city: string | null;
+   state: string | null;
+   country: string;
+   isNewUser: boolean;
+}
+
 const HeaderDashboard = ({ onCountryChange }: HeaderProps) => {
+   const [user, setUser] = useState<UserProfile | null>(
+      JSON.parse(localStorage.getItem("user") || "{}"),
+   );
+
+   if (!user) return;
+
    return (
       <header className="absolute top-0 flex h-16 w-full items-center justify-between border-b px-[46px]">
          <div className="flex items-center gap-2">
-            <div className="h-6 w-6 rounded-full bg-[#A8A8A8]"></div>
+            <Image
+               src={user?.photoUrl}
+               alt="profile"
+               width={30}
+               height={30}
+               className="rounded-full"
+            />
 
-            <p className="text-sm">USERNAME</p>
+            <p className="text-sm">{user?.firstName}</p>
          </div>
 
          <div className="text-3xl drop-shadow-lg">Climate Alert Hub</div>

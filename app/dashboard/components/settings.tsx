@@ -1,7 +1,9 @@
 import { Switch } from "@/app/components/ui/switch";
 import { ChangeEvent, FormEvent, useState } from "react";
 import ModalSettings from "./modal-settings";
+import Image from "next/image";
 import ModalDelete from "./modal-delete";
+import { UserProfile } from "@/app/types/use-profile";
 
 interface City {
    display_name: string;
@@ -13,9 +15,17 @@ const Settings = () => {
       useState<boolean>(false);
    const [isModalDelete, setIsModalDelete] = useState<boolean>(false);
 
-   const [query, setQuery] = useState<string>("");
    const [suggestions, setSuggestions] = useState<City[]>([]);
    const [selectedCity, setSelectedCity] = useState<string>("");
+
+   const [user, setUser] = useState<UserProfile | null>(
+      JSON.parse(localStorage.getItem("user") || "{}"),
+   );
+
+   const userQuery = user?.city + ", " + user?.state;
+   const [query, setQuery] = useState<string>(userQuery);
+
+   if (!user) return;
 
    const fetchCities = async (query: string) => {
       try {
@@ -46,18 +56,43 @@ const Settings = () => {
       setSuggestions([]);
    };
 
-   const handleSubmit = (event: FormEvent) => {
+   const handleSubmit = async (event: FormEvent) => {
       event.preventDefault();
-      if (selectedCity) {
-         const cityParts = selectedCity.split(",");
-         const state = cityParts[cityParts.length - 3]?.trim();
-         const city = cityParts[0]?.trim();
-         console.log("City:", city);
-         console.log("State:", state);
-         console.log("Switch:", switchValue);
-      } else {
+      if (!selectedCity) {
          alert("Please select a city first.");
       }
+
+      const cityParts = selectedCity.split(",");
+      const state = cityParts[cityParts.length - 3]?.trim();
+      const city = cityParts[0]?.trim();
+      const reciveEmail = switchValue;
+
+      const response = await fetch(
+         "https://6c8gv2v8-3001.brs.devtunnels.ms/auth/me/recive-email ",
+         {
+            method: "PUT",
+            headers: {
+               "Content-Type": "application/json",
+               authorization: `Bearer ${localStorage.getItem("jwt")}`,
+            },
+            body: JSON.stringify({
+               reciveEmail,
+               city,
+               state,
+            }),
+         },
+      );
+
+      const data = await response.json();
+
+      if (data.status === 400) {
+         console.log("Erro ao atualizar dados:", data.error);
+         return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      window.location.reload();
    };
 
    const handleOpenModalSettings = () => {
@@ -80,7 +115,13 @@ const Settings = () => {
 
             <div className="flex flex-col px-10 py-14">
                <div className="flex items-center gap-2">
-                  <div className="h-10 w-10 rounded-full bg-[#A8A8A8]"></div>
+                  <Image
+                     src={user?.photoUrl}
+                     alt="profile"
+                     width={46}
+                     height={46}
+                     className="rounded-full"
+                  />
 
                   <p className="font-semibold">Profile picture</p>
                </div>
@@ -90,12 +131,14 @@ const Settings = () => {
                <div className="flex w-full items-center gap-10">
                   <div className="flex w-full flex-col items-start gap-1">
                      <p className="text-sm text-[#101010]">First Name</p>
-                     <div className="w-full border px-3 text-lg">IAGO</div>
+                     <div className="w-full border px-3 text-lg">
+                        {user?.firstName}
+                     </div>
                   </div>
                   <div className="flex w-full flex-col items-start gap-1">
                      <p className="text-sm text-[#101010]">Last Name</p>
                      <div className="w-full border px-3 text-lg">
-                        Correia Simoes
+                        {user?.lastName}
                      </div>
                   </div>
                </div>
@@ -103,7 +146,7 @@ const Settings = () => {
                <div className="flex w-full flex-col items-start gap-1">
                   <p className="text-sm text-[#101010]">Email</p>
                   <div className="w-full border px-3 font-semibold">
-                     IAGOOCSIMOES@GMAIL.COM
+                     {user?.email}
                   </div>
                </div>
 
