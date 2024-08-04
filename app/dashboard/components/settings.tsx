@@ -69,7 +69,7 @@ const Settings = () => {
    };
 
    return (
-      <div className="flex items-center pt-2">
+      <div className="flex items-center px-7 pt-2">
          <div className="h-[783px] w-[1080px] rounded-2xl shadow-rounded">
             <div className="mt-2 flex flex-col px-10 py-5">
                <h1 className="text-xl font-bold">Account Details</h1>

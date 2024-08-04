@@ -10,6 +10,7 @@ import { Graphic } from "./components/graphic";
 import Settings from "./components/settings";
 
 import ModalNews from "./components/modal-news";
+import PopulationPage from "./components/population";
 
 const Dashboard = () => {
    // Carregamento dinâmico dos mapas
@@ -82,7 +83,7 @@ const Dashboard = () => {
    };
 
    return (
-      <div className="relative flex h-screen gap-16">
+      <div className="relative flex h-screen">
          <HeaderDashboard onCountryChange={handleCountryChange} />
 
          <nav className="h-screen w-[300px] bg-[#F3F3F3]">
@@ -116,16 +117,14 @@ const Dashboard = () => {
                </div>
             </div>
 
-            <div className="left-[6 px] fixed bottom-0 text-[9px] font-semibold">
+            <div className="fixed bottom-0 left-[60px] text-[9px] font-semibold">
                Created By: Equipe Coda Fofo
             </div>
          </nav>
 
-         <main className="mt-24 w-full">
+         <main className="mt-24 w-full pl-5 pr-16">
             {page ? (
-               <div className="flex flex-col gap-3">
-                  <h1>Dashboard</h1>
-
+               <div className="flex gap-16">
                   <div className="flex gap-16">
                      <section className="flex flex-col gap-5">
                         <div className="flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
@@ -136,10 +135,9 @@ const Dashboard = () => {
                            {country === "MZ" && <MapMoçambique />}
                         </div>
 
-                        <div className="flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
-                           <h1>
-                              5 cidades da <br /> equipe <br /> coda fofo
-                           </h1>
+                        <div className="flex h-[383px] w-[422px] justify-center rounded-2xl shadow-rounded">
+                           <h1 className="pt-2 text-2xl">5 Cities Weather:</h1>
+                           {/* // TODO: Add cities weather */}
                         </div>
                      </section>
 
@@ -178,7 +176,7 @@ const Dashboard = () => {
                            )}
                         </div>
 
-                        <div className="mt-5 flex flex-col gap-10">
+                        <div className="mt-5 flex flex-col gap-6">
                            {news.length > 0 ? (
                               news.slice(0, 2).map((item) => (
                                  <div
@@ -202,11 +200,15 @@ const Dashboard = () => {
                               ))
                            ) : (
                               <p className="text-gray-500">
-                                 Nenhuma notícia disponível.
+                                 No news available.
                               </p>
                            )}
                         </div>
                      </div>
+                  </div>
+
+                  <div className="w-full rounded-xl border px-3 pt-2">
+                     <PopulationPage />
                   </div>
                </div>
             ) : (
