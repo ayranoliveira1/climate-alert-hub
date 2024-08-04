@@ -1,20 +1,71 @@
 import { Switch } from "@/app/components/ui/switch";
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import ModalSettings from "./modal-settings";
+import ModalDelete from "./modal-delete";
+
+interface City {
+   display_name: string;
+}
 
 const Settings = () => {
    const [switchValue, setSwitchValue] = useState<boolean>(false);
-   const [isCountry, setIsCountry] = useState<string>();
    const [isOpenModalSettings, setIsOpenModalSettings] =
       useState<boolean>(false);
+   const [isModalDelete, setIsModalDelete] = useState<boolean>(false);
 
-   const handleSwitchCheck = (evet: FormEvent) => {
-      evet.preventDefault();
-      console.log(switchValue, isCountry);
+   const [query, setQuery] = useState<string>("");
+   const [suggestions, setSuggestions] = useState<City[]>([]);
+   const [selectedCity, setSelectedCity] = useState<string>("");
+
+   const fetchCities = async (query: string) => {
+      try {
+         const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?city=${query}&format=json&addressdetails=1`,
+         );
+         const data: City[] = await response.json();
+         setSuggestions(data);
+      } catch (error) {
+         console.error("Error fetching cities:", error);
+      }
+   };
+
+   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      setQuery(value);
+
+      if (value.length > 2) {
+         fetchCities(value);
+      } else {
+         setSuggestions([]);
+      }
+   };
+
+   const handleSuggestionClick = (city: City) => {
+      setSelectedCity(city.display_name);
+      setQuery(city.display_name);
+      setSuggestions([]);
+   };
+
+   const handleSubmit = (event: FormEvent) => {
+      event.preventDefault();
+      if (selectedCity) {
+         const cityParts = selectedCity.split(",");
+         const state = cityParts[cityParts.length - 3]?.trim();
+         const city = cityParts[0]?.trim();
+         console.log("City:", city);
+         console.log("State:", state);
+         console.log("Switch:", switchValue);
+      } else {
+         alert("Please select a city first.");
+      }
    };
 
    const handleOpenModalSettings = () => {
       setIsOpenModalSettings(!isOpenModalSettings);
+   };
+
+   const handleOpenModalDelete = () => {
+      setIsModalDelete(!isModalDelete);
    };
 
    return (
@@ -56,11 +107,8 @@ const Settings = () => {
                   </div>
                </div>
 
-               <form
-                  onSubmit={handleSwitchCheck}
-                  className="flex flex-col gap-36"
-               >
-                  <div className="flex items-center gap-20">
+               <form onSubmit={handleSubmit} className="flex flex-col">
+                  <div className="flex items-start gap-20">
                      <div className="flex flex-col items-start gap-3">
                         <span className="flex items-center gap-1 text-lg font-light">
                            Recive Email
@@ -85,18 +133,36 @@ const Settings = () => {
                         />
                      </div>
 
-                     <div className="flex flex-col items-center gap-2">
+                     <div className="flex h-[200px] flex-col items-center gap-2">
                         <span className="text-base font-light">
                            Choose your city
                         </span>
 
                         <input
-                           onChange={(e) => setIsCountry(e.target.value)}
-                           name="country"
-                           id="country"
-                           placeholder="Ex.: Salvador"
+                           autoComplete="off"
+                           type="text"
+                           id="cityInput"
+                           value={query}
+                           onChange={handleInputChange}
+                           placeholder="Enter a city name"
                            className="h-9 w-[278px] border px-4 text-sm"
                         />
+
+                        <div
+                           id="suggestions"
+                           className="mt-1 max-h-[100px] max-w-[278px] overflow-y-scroll border border-x-gray-100"
+                        >
+                           {suggestions.map((city, index) => (
+                              <div
+                                 key={index}
+                                 className="suggestion-item"
+                                 onClick={() => handleSuggestionClick(city)}
+                                 style={{ padding: "8px", cursor: "pointer" }}
+                              >
+                                 {city.display_name}
+                              </div>
+                           ))}
+                        </div>
                      </div>
                   </div>
 
@@ -114,9 +180,16 @@ const Settings = () => {
             <div className="mt-8 h-[1px] w-full bg-[#ABABAB]/50"></div>
 
             <div className="w-full items-center gap-6 px-10 pt-8">
-               <button className="text-red-500 hover:text-red-800">
+               <button
+                  onClick={handleOpenModalDelete}
+                  className="text-red-500 hover:text-red-800"
+               >
                   Delete Account
                </button>
+
+               {isModalDelete && (
+                  <ModalDelete handleOpenModalDelete={handleOpenModalDelete} />
+               )}
             </div>
          </div>
       </div>
