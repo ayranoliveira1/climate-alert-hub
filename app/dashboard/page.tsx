@@ -96,6 +96,8 @@ const Dashboard = () => {
          }));
 
          setNews(topNews);
+
+         console.log("Notícias recebidas com sucesso.");
       } catch (error) {
          console.error("Erro na requisição:", error);
          setNews([]);

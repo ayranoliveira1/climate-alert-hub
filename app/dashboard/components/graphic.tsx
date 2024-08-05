@@ -29,7 +29,7 @@ export function Graphic({
       After: city.After,
       Last: city.Last,
    }));
-   console.log(chartData);
+
    return (
       <ChartContainer config={chartConfig} className="h-[300px] w-full">
          <BarChart accessibilityLayer data={chartData}>
