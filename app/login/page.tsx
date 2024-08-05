@@ -9,7 +9,7 @@ export default function Login() {
          <div className="min-h-screen">
             <Header />
 
-            <section className="flex items-center justify-center pt-60 text-center">
+            <section className="flex items-center justify-center pt-32 text-center lg:pt-60">
                <div className="flex flex-col gap-5">
                   <p className="text-[30px] font-bold">Sign in</p>
                   <p className="text-[24px] text-[#8C8C8C]">

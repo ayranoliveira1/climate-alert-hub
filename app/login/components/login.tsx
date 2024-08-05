@@ -59,9 +59,16 @@ const LoginAuth = () => {
    }
 
    return (
-      <GoogleOAuthProvider clientId={CLIENT_ID}>
-         <GoogleLogin onSuccess={handleLoginSuccess} locale="en" width={300} />
-      </GoogleOAuthProvider>
+      <div className="z-0">
+         <GoogleOAuthProvider clientId={CLIENT_ID}>
+            <GoogleLogin
+               onSuccess={handleLoginSuccess}
+               locale="en"
+               width={300}
+               type="standard"
+            />
+         </GoogleOAuthProvider>
+      </div>
    );
 };
 

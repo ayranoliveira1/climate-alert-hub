@@ -11,7 +11,7 @@ const About = () => {
             ABOUT US
          </h2>
 
-         <section className="flex items-center justify-center gap-10">
+         <section className="mt-5 flex items-center justify-center gap-10">
             <Image
                src={imagemBoneco}
                alt="Boneco"
@@ -35,16 +35,18 @@ const About = () => {
 
          <section className="flex items-center justify-center">
             <div className="flex flex-col text-center">
-               <h5 className="text-[30px] font-bold">What we do</h5>
-               <p className="text-[20px] text-[#8C8C8C]">
+               <h5 className="mt-5 text-2xl font-bold lg:text-[30px]">
+                  What we do
+               </h5>
+               <p className="text-[10px] text-[#8C8C8C] lg:text-2xl lg:text-[20px]">
                   Climate Hub Alert offers a comprehensive range of features for{" "}
                   <br /> monitoring and managing climate conditions, including:
                </p>
             </div>
          </section>
 
-         <section className="flex justify-center gap-5 pt-8">
-            <div className="flex flex-col gap-7">
+         <section className="flex justify-center gap-5 px-5 pt-8">
+            <div className="flex flex-col gap-7 text-[10px] lg:text-base">
                <p className="flex items-center gap-5 text-[#8C8C8C]">
                   <FaCircle className="text-black" />
                   Real-Time Monitoring: We provide up-to-date data on <br />{" "}
@@ -58,7 +60,7 @@ const About = () => {
                </p>
             </div>
 
-            <div className="flex flex-col gap-7">
+            <div className="flex flex-col gap-7 text-[10px] lg:text-base">
                <p className="flex items-center gap-5 text-[#8C8C8C]">
                   <FaCircle className="text-black" />
                   Custom Alerts: Our technology allows you to set up <br />{" "}
