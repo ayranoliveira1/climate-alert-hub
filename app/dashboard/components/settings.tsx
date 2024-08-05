@@ -1,5 +1,5 @@
 import { Switch } from "@/app/components/ui/switch";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import ModalSettings from "./modal-settings";
 import Image from "next/image";
 import ModalDelete from "./modal-delete";
@@ -18,9 +18,22 @@ const Settings = () => {
    const [suggestions, setSuggestions] = useState<City[]>([]);
    const [selectedCity, setSelectedCity] = useState<string>("");
 
-   const [user, setUser] = useState<UserProfile | null>(
-      JSON.parse(localStorage.getItem("user") || "{}"),
-   );
+   useEffect(() => {
+      const local = JSON.parse(localStorage.getItem("user") as string);
+      setUser(local);
+   }, []);
+
+   const [user, setUser] = useState<UserProfile | null>({
+      firstName: "string",
+      lastName: "string",
+      photoUrl: "/discord.png",
+      email: "string",
+      reciveEmail: true,
+      city: "string ",
+      state: "string",
+      country: "brazil",
+      isNewUser: true,
+   });
 
    const userQuery = user?.city + ", " + user?.state;
    const [query, setQuery] = useState<string>(userQuery);

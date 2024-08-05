@@ -38,9 +38,23 @@ const Dashboard = () => {
    >([]);
    const [data, setData] = useState<any>();
    const [opneModalNews, setOpneModalNews] = useState<boolean>(false);
-   const [sessin, setSession] = useState<UserProfile | null>(
-      JSON.parse(localStorage.getItem("user") || "{}"),
-   );
+
+   useEffect(() => {
+      const local = JSON.parse(localStorage.getItem("user") as string);
+      setSession(local);
+   }, []);
+
+   const [sessin, setSession] = useState<UserProfile | null>({
+      firstName: "string",
+      lastName: "string",
+      photoUrl: "string",
+      email: "string",
+      reciveEmail: true,
+      city: "string or null",
+      state: "string or null",
+      country: "brazil",
+      isNewUser: true,
+   });
 
    // Carregamento dinâmico dos mapas
    const MapBrazil = dynamic(() => import("./components/maps/HeatMapBR"), {

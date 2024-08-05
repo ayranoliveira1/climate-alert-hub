@@ -2,7 +2,7 @@
 
 import { ModeToggle } from "@/app/components/mode-toogle";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PiBellBold } from "react-icons/pi";
 
 interface HeaderProps {
@@ -22,9 +22,22 @@ interface UserProfile {
 }
 
 const HeaderDashboard = ({ onCountryChange }: HeaderProps) => {
-   const [user, setUser] = useState<UserProfile | null>(
-      JSON.parse(localStorage.getItem("user") || "{}"),
-   );
+   useEffect(() => {
+      const local = JSON.parse(localStorage.getItem("user") as string);
+      setUser(local);
+   }, []);
+
+   const [user, setUser] = useState<UserProfile | null>({
+      firstName: "string",
+      lastName: "string",
+      photoUrl: "/discord.png",
+      email: "string",
+      reciveEmail: true,
+      city: "string or null",
+      state: "string or null",
+      country: "brazil",
+      isNewUser: true,
+   });
 
    if (!user) return;
 
