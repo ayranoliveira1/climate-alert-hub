@@ -81,7 +81,7 @@ const Settings = () => {
       const reciveEmail = switchValue;
 
       const response = await fetch(
-         "https://6c8gv2v8-3001.brs.devtunnels.ms/auth/me/recive-email ",
+         "https://climate-alert-hub.onrender.com/auth/me/recive-email ",
          {
             method: "PUT",
             headers: {
