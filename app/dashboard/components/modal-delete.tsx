@@ -17,7 +17,7 @@ const ModalSettings = ({ handleOpenModalDelete }: ModalDeleteProps) => {
       const token = localStorage.getItem("jwt");
 
       const response = await fetch(
-         "https://6c8gv2v8-3001.brs.devtunnels.ms/auth/me",
+         "https://climate-alert-hub.onrender.com/auth/me",
          {
             method: "DELETE",
             headers: {

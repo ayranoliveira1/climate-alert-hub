@@ -16,20 +16,6 @@ import { useRouter } from "next/navigation";
 import { UserProfile } from "../types/use-profile";
 import Image from "next/image";
 
-function getCountrySigle(country: string) {
-   if (country === "brazil") {
-      return "BR";
-   } else if (country === "mocambique") {
-      return "MZ";
-   } else if (country === "russia") {
-      return "RU";
-   } else if (country === "unitedStates") {
-      return "US";
-   } else {
-      return "PH";
-   }
-}
-
 const Dashboard = () => {
    const [page, setPage] = useState<boolean>(false);
    const [country, setCountry] = useState<string>("BR");
@@ -109,7 +95,7 @@ const Dashboard = () => {
    };
 
    const fetchData = async () => {
-      const url = "https://6c8gv2v8-3001.brs.devtunnels.ms/dashboard";
+      const url = "https://climate-alert-hub.onrender.com/dashboard";
 
       const response = await fetch(url, {
          method: "GET",
