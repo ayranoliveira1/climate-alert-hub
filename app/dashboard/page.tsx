@@ -31,13 +31,13 @@ const Dashboard = () => {
    }, []);
 
    const [sessin, setSession] = useState<UserProfile | null>({
-      firstName: "string",
-      lastName: "string",
-      photoUrl: "string",
-      email: "string",
+      firstName: "Loading...",
+      lastName: "Loading...",
+      photoUrl: "loading...",
+      email: "Loading...",
       reciveEmail: true,
-      city: "string or null",
-      state: "string or null",
+      city: "Loading... ",
+      state: "Loading...",
       country: "brazil",
       isNewUser: true,
    });
@@ -77,17 +77,25 @@ const Dashboard = () => {
       try {
          const response = await fetch(url);
          const data = await response.json();
-         if (data.status === "ok" && data.news.length > 0) {
-            const topNews = data.news.slice(0, 10).map((newsItem: any) => ({
-               title: newsItem.title,
-               url: newsItem.url,
-               description: newsItem.description,
-            }));
-            setNews(topNews);
-         } else {
-            console.error("Erro ao buscar notícias:", data);
+         if (data.status === "error" || data.error == true) {
+            console.error("Erro na requisição:", data.message);
             setNews([]);
+            return;
          }
+
+         if (!data.news) {
+            console.error("Erro na requisição:", data.message);
+            setNews([]);
+            return;
+         }
+
+         const topNews = data.news.slice(0, 10).map((newsItem: any) => ({
+            title: newsItem.title,
+            url: newsItem.url,
+            description: newsItem.description,
+         }));
+
+         setNews(topNews);
       } catch (error) {
          console.error("Erro na requisição:", error);
          setNews([]);

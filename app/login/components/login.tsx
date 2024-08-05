@@ -18,7 +18,7 @@ const LoginAuth = () => {
 
       console.log("Token do Google :", googleToken);
 
-      fetch("https://6c8gv2v8-3001.brs.devtunnels.ms/auth/sign-in", {
+      fetch("https://climate-alert-hub.onrender.com/auth/sign-in", {
          method: "POST",
          headers: {
             "Content-Type": "application/json",

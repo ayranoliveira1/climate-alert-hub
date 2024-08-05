@@ -21,16 +21,17 @@ const Settings = () => {
    useEffect(() => {
       const local = JSON.parse(localStorage.getItem("user") as string);
       setUser(local);
+      setQuery(local.city + ", " + local.state);
    }, []);
 
    const [user, setUser] = useState<UserProfile | null>({
-      firstName: "string",
-      lastName: "string",
-      photoUrl: "/discord.png",
-      email: "string",
+      firstName: "Loading...",
+      lastName: "Loading...",
+      photoUrl: "/background-home-page.webp",
+      email: "Loading...",
       reciveEmail: true,
-      city: "string ",
-      state: "string",
+      city: "",
+      state: "",
       country: "brazil",
       isNewUser: true,
    });
@@ -73,12 +74,18 @@ const Settings = () => {
       event.preventDefault();
       if (!selectedCity) {
          alert("Please select a city first.");
+         return;
       }
 
       const cityParts = selectedCity.split(",");
       const state = cityParts[cityParts.length - 3]?.trim();
       const city = cityParts[0]?.trim();
       const reciveEmail = switchValue;
+
+      if (!city || !state) {
+         alert("Please enter a valid city and state.");
+         return;
+      }
 
       const response = await fetch(
          "https://climate-alert-hub.onrender.com/auth/me/recive-email ",
@@ -98,7 +105,7 @@ const Settings = () => {
 
       const data = await response.json();
 
-      if (data.status === 400) {
+      if (data.status === "error" || data.error == true) {
          console.log("Erro ao atualizar dados:", data.error);
          return;
       }

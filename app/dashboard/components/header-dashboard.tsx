@@ -28,13 +28,13 @@ const HeaderDashboard = ({ onCountryChange }: HeaderProps) => {
    }, []);
 
    const [user, setUser] = useState<UserProfile | null>({
-      firstName: "string",
-      lastName: "string",
-      photoUrl: "/discord.png",
-      email: "string",
+      firstName: "Loading...",
+      lastName: "Loading...",
+      photoUrl: "/background-home-page.webp",
+      email: "Loading...",
       reciveEmail: true,
-      city: "string or null",
-      state: "string or null",
+      city: "Loading... ",
+      state: "Loading...",
       country: "brazil",
       isNewUser: true,
    });
