@@ -6,7 +6,8 @@ const About = () => {
    return (
       <>
          <Header />
-         <h2 className="flex justify-center pt-5 text-[48px] font-bold">
+
+         <h2 className="flex justify-center pt-5 text-3xl font-bold lg:text-[48px]">
             ABOUT US
          </h2>
 
@@ -14,11 +15,13 @@ const About = () => {
             <Image
                src={imagemBoneco}
                alt="Boneco"
-               className="h-[351px] w-[351px]"
+               className="hidden h-[351px] w-[351px] lg:flex"
             />
             <div>
-               <h5 className="text-[30px] font-bold">Our mission</h5>
-               <p className="text-[#8C8C8C]">
+               <h5 className="text-center text-xl font-bold lg:text-start lg:text-[30px]">
+                  Our mission
+               </h5>
+               <p className="text-center text-[10px] text-[#8C8C8C] lg:text-start lg:text-base">
                   Our mission is to empower individuals and communities around
                   the <br /> world with essential weather information and timely
                   warnings, <br /> helping them make informed decisions and

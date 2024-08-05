@@ -183,14 +183,11 @@ const Dashboard = () => {
                   <div className="flex gap-16">
                      <section className="flex flex-col gap-5">
                         <div className="flex h-[383px] w-[422px] items-center justify-center rounded-2xl shadow-rounded">
-                           {/* {data?.map ? (
-                              <MapBrazil
-                                 citiesArray={data.map}
-                                 country={sessin?.country || "brazil"}
-                              />
-                           ) : (
-                              <></>
-                           )} */}
+                           {country === "BR" && <MapBrazil />}
+                           {country === "US" && <MapUS />}
+                           {country === "RU" && <MapRussia />}
+                           {country === "PH" && <MapPhilippines />}
+                           {country === "MZ" && <MapMoçambique />}
                         </div>
 
                         <div className="flex h-[383px] w-[422px] flex-col items-center rounded-2xl shadow-rounded">
