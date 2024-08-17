@@ -47,6 +47,11 @@ const Settings = () => {
             `https://nominatim.openstreetmap.org/search?city=${query}&format=json&addressdetails=1`,
          );
          const data: City[] = await response.json();
+
+         if (!data) {
+            console.error("Error fetching cities");
+            return;
+         }
          setSuggestions(data);
       } catch (error) {
          console.error("Error fetching cities:", error);
@@ -57,11 +62,12 @@ const Settings = () => {
       const value = event.target.value;
       setQuery(value);
 
-      if (value.length > 2) {
-         fetchCities(value);
-      } else {
+      if (!value) {
          setSuggestions([]);
+         return;
       }
+
+      fetchCities(value);
    };
 
    const handleSuggestionClick = (city: City) => {
@@ -72,6 +78,7 @@ const Settings = () => {
 
    const handleSubmit = async (event: FormEvent) => {
       event.preventDefault();
+
       if (!selectedCity) {
          alert("Please select a city first.");
          return;

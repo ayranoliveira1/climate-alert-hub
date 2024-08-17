@@ -17,7 +17,7 @@ import { UserProfile } from "../types/use-profile";
 import Image from "next/image";
 
 const Dashboard = () => {
-   const [page, setPage] = useState<boolean>(false);
+   const [page, setPage] = useState<boolean>(true);
    const [country, setCountry] = useState<string>("BR");
    const [news, setNews] = useState<
       Array<{ title: string; url: string; description: string }>
@@ -74,9 +74,11 @@ const Dashboard = () => {
 
    const fetchNews = async (countryCode: string) => {
       const url = `${API_URL}?country=${countryCode}&apiKey=${API_KEY}`;
+
       try {
          const response = await fetch(url);
          const data = await response.json();
+
          if (data.status === "error" || data.error == true) {
             console.error("Erro na requisição:", data.message);
             setNews([]);
@@ -114,6 +116,13 @@ const Dashboard = () => {
          },
       });
       const data = await response.json();
+
+      if (!data) {
+         console.error("Erro na requisição:", data.message);
+         setData(null);
+         return;
+      }
+
       setData(data);
    };
 
