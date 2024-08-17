@@ -19,7 +19,15 @@ const Contact = () => {
                      width={60}
                      height={60}
                      alt="discord"
-                     className="h-9 w-9 lg:h-[60px] lg:w-[60px]"
+                     className="hidden lg:block"
+                  />
+
+                  <Image
+                     src="/discord.png"
+                     width={35}
+                     height={20}
+                     alt="discord"
+                     className="lg:hidden"
                   />
                   <p className="">Join our Discord</p>
                </button>
@@ -37,7 +45,15 @@ const Contact = () => {
                      width={59}
                      height={45.32}
                      alt="email"
-                     className="h-7 w-7 lg:h-[45.32px] lg:w-[59px]"
+                     className="hidden lg:block"
+                  />
+
+                  <Image
+                     src="/email.png"
+                     width={26}
+                     height={30}
+                     alt="email"
+                     className="lg:hidden"
                   />
                   <p>Send us an Email</p>
                </button>

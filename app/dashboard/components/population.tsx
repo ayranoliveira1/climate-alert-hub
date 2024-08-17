@@ -9,14 +9,18 @@ const PopulationPage = () => {
          try {
             const response = await fetch("https://restcountries.com/v3.1/all");
             const data = await response.json();
-            // Extrair nome do país, população e bandeira
+
+            if (!data) {
+               console.error("Error fetching population data");
+               return;
+            }
+
             const countriesData: Country[] = data.map((country: any) => ({
                name: country.name.common,
                population: country.population,
-               flag: country.flags.svg, // URL da bandeira em formato SVG
+               flag: country.flags.svg,
             }));
 
-            // Ordenar por população do maior para o menor
             countriesData.sort((a, b) => b.population - a.population);
 
             setCountries(countriesData);

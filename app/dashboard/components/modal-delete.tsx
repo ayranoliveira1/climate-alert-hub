@@ -16,6 +16,10 @@ const ModalSettings = ({ handleOpenModalDelete }: ModalDeleteProps) => {
    const deleteUser = async () => {
       const token = localStorage.getItem("jwt");
 
+      if (!token) {
+         return;
+      }
+
       handleLogout();
 
       await fetch("https://climate-alert-hub.onrender.com/auth/me", {
