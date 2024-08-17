@@ -16,9 +16,9 @@ const LoginAuth = () => {
    const handleLoginSuccess = (credentialResponse: CredentialResponse) => {
       const googleToken = credentialResponse.credential;
 
-      console.log("Token do Google :", googleToken);
+      console.log("Token recebido com sucesso!");
 
-      fetch("https://6c8gv2v8-3001.brs.devtunnels.ms/auth/sign-in", {
+      fetch("https://climate-alert-hub.onrender.com/auth/sign-in", {
          method: "POST",
          headers: {
             "Content-Type": "application/json",
@@ -32,7 +32,7 @@ const LoginAuth = () => {
             return response.json();
          })
          .then((data) => {
-            console.log("Resposta do servidor:", data);
+            console.log("Resposta do servidor recebida com sucesso");
             if (!data.token) {
                throw new Error("Token JWT inválido");
             }

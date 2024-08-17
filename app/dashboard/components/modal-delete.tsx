@@ -7,7 +7,7 @@ interface ModalDeleteProps {
 }
 
 const ModalSettings = ({ handleOpenModalDelete }: ModalDeleteProps) => {
-   const [sessin, setSession] = useState<UserProfile | null>(
+   const [session, setSession] = useState<UserProfile | null>(
       JSON.parse(localStorage.getItem("user") || "{}"),
    );
 
@@ -16,32 +16,23 @@ const ModalSettings = ({ handleOpenModalDelete }: ModalDeleteProps) => {
    const deleteUser = async () => {
       const token = localStorage.getItem("jwt");
 
-      const response = await fetch(
-         "https://climate-alert-hub.onrender.com/auth/me",
-         {
-            method: "DELETE",
-            headers: {
-               authorization: `Bearer ${token}`,
-            },
-         },
-      );
-
-      if (!response.ok) {
-         console.log("Erro ao deletar conta:", response.statusText);
-      }
-
       handleLogout();
 
-      window.location.href = "/login";
+      await fetch("https://climate-alert-hub.onrender.com/auth/me", {
+         method: "DELETE",
+         headers: {
+            authorization: `Bearer ${token}`,
+         },
+      });
    };
 
    useEffect(() => {
-      if (!sessin) {
+      if (session == null) {
          localStorage.removeItem("jwt");
          localStorage.removeItem("user");
          router.push("/login");
       }
-   }, [sessin, router]);
+   }, [session, router]);
 
    const handleLogout = () => {
       setSession(null);
